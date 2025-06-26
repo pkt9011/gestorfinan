@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Nombre del menú</label>
+                    <label class="form-label">Nombre del Menú</label>
                     <textbox sclass="form-control" id="text_nombre"/>
                 </div>
 
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <window id="win_menu_form" title="Crear Menu" closable="true" width="30%" visible="false"
+        <window id="win_menu_form" title="Crear Menú" closable="true" width="30%" visible="false"
                 onClose="win_menu_form.setVisible(false); event.stopPropagation();">
             <label id="label_padre" sclass="h6"></label>
             <separator></separator>

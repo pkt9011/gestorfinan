@@ -13,17 +13,17 @@
             <div class="card text-center shadow-lg p-4" style="width: 40rem;">
                 <div class="card-body">
                     <image id="img_login" width="150px;"></image>
-                    <n:p class="card-text fs-4">Ingrese sus credenciales</n:p>
+                    <n:p class="card-text fs-4">Ingrese sus Credenciales</n:p>
                     <div class="mb-3 text-start">
                         <label value="Usuario" class="form-label fw-bold"></label>
-                        <textbox id="txtUsuario" sclass="form-control"  style="text-transform: uppercase;" placeholder="Ingrese su usuario" constraint="no empty"/>
+                        <textbox id="txtUsuario" sclass="form-control"  style="text-transform: uppercase;" placeholder="Ingrese su usuario." constraint="no empty"/>
                     </div>
                     <div class="mb-3 text-start">
                         <label value="Contraseña" class="form-label fw-bold"></label>
-                        <textbox id="txtPassword" type="password" sclass="form-control" placeholder="Ingrese su contraseña" constraint="no empty"/>
+                        <textbox id="txtPassword" type="password" sclass="form-control" placeholder="Ingrese su contraseña." constraint="no empty"/>
                     </div>
                     <div class="d-grid">
-                        <button id="button" class="btn btn-primary btn-lg" label="Iniciar sesión"/>
+                        <button id="button" class="btn btn-primary btn-lg" label="Iniciar Sesión"/>
                     </div>
                 </div>
             </div>

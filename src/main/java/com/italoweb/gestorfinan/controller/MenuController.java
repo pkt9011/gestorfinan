@@ -79,7 +79,7 @@ public class MenuController extends Window implements AfterCompose {
                     Executions.sendRedirect(null);
                 }
             }else{
-                DialogUtil.showError("El Nombre Menu es obligatorio");
+                DialogUtil.showError("El Nombre del Menú es un campo obligatorio.");
             }
         });
         
@@ -123,7 +123,7 @@ public class MenuController extends Window implements AfterCompose {
 
     // Construye el menú dinámicamente en la vista
     private void buildSidebar() {
-        sidebarNav.appendChild(createSidebarHeader("Menu"));
+        sidebarNav.appendChild(createSidebarHeader("Menú"));
         for (MenuItem item : menuItems) {
             if (item.getSubMenu().isEmpty()) {
                 sidebarNav.appendChild(createSidebarItem(item));
@@ -191,7 +191,7 @@ public class MenuController extends Window implements AfterCompose {
                         if (confirmed) {
                             boolean res = manager.deleteById(item.getId());
                             if (res)
-                                DialogUtil.showInformation("Se ha eliminado el item del menu corectamente");
+                                DialogUtil.showInformation("Se ha eliminado el item del menú corectamente");
                                 Executions.sendRedirect(null);
                         }
                     });
@@ -290,7 +290,7 @@ public class MenuController extends Window implements AfterCompose {
                         if (confirmed) {
                             boolean res = manager.deleteById(item.getId());
                             if (res)
-                                DialogUtil.showInformation("Se ha eliminado el item del menu corectamente");
+                                DialogUtil.showInformation("Se ha eliminado el item del menú corectamente.");
                                 Executions.sendRedirect(null);
                         }
                     });
@@ -363,9 +363,9 @@ public class MenuController extends Window implements AfterCompose {
             } else {
                 manager.create(menuItem1);
             }
-            DialogUtil.showInformation("Item agregado Correctamente");
+            DialogUtil.showInformation("Item agregado Correctamente.");
         }else {
-            DialogUtil.showError("El campo nombre es obligatorio");
+            DialogUtil.showError("El campo nombre es obligatorio.");
         }
         this.win_menu_form.setVisible(false);
         Executions.sendRedirect(null);
