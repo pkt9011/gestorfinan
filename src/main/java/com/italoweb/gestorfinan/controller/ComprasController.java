@@ -39,11 +39,9 @@ import com.italoweb.gestorfinan.model.Proveedor;
 import com.italoweb.gestorfinan.model.Usuario;
 import com.italoweb.gestorfinan.model.compra.CompraDetalle;
 import com.italoweb.gestorfinan.model.compra.Compras;
-import com.italoweb.gestorfinan.model.venta.VentaDetalle;
-import com.italoweb.gestorfinan.repository.ComprasDAO;
-import com.italoweb.gestorfinan.repository.InventarioDAO;
 import com.italoweb.gestorfinan.repository.MedioPagoDAO;
 import com.italoweb.gestorfinan.repository.ProveedorDAO;
+import com.italoweb.gestorfinan.service.ComprasService;
 import com.italoweb.gestorfinan.util.ComponentsUtil;
 import com.italoweb.gestorfinan.util.DialogUtil;
 import com.italoweb.gestorfinan.util.FormatoUtil;
@@ -52,6 +50,7 @@ public class ComprasController extends GenericForwardComposer<Component> {
 
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unused")
 	private Grid gridDetalle;
 	private Rows rowsDetalle;
 	private Label lblTotal;
@@ -201,17 +200,15 @@ public class ComprasController extends GenericForwardComposer<Component> {
 
 		Datebox dtFechaVencimiento = new Datebox();
 		dtFechaVencimiento.setWidth("180px");
-		dtFechaVencimiento.setValue(FormatoUtil.convertirALocalDateDate(detalle.getFechaVencimiento())); // Puede ser
+		dtFechaVencimiento.setValue(FormatoUtil.convertirALocalDateDate(detalle.getFechaVencimiento()));
 		row.appendChild(dtFechaVencimiento);
 
 		Label lblTotalFila = new Label("$ " + FormatoUtil.formatDecimal(detalle.getTotalCompra()));
 		row.appendChild(lblTotalFila);
 
-		// Listener para actualizar fecha vencimiento en el detalle
 		dtFechaVencimiento.addEventListener(Events.ON_CHANGE, e -> {
 			Date fechaSeleccionada = dtFechaVencimiento.getValue();
 			if (fechaSeleccionada != null) {
-				// Convierte Date a LocalDate si tu entidad usa LocalDate
 				detalle.setFechaVencimiento(fechaSeleccionada.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 			} else {
 				detalle.setFechaVencimiento(null);
@@ -303,6 +300,7 @@ public class ComprasController extends GenericForwardComposer<Component> {
 	}
 
 	public void onClick$btnGuardar() {
+		// 1) Validaciones previas
 		if (!validarCabecera()) {
 			return;
 		}
@@ -311,36 +309,39 @@ public class ComprasController extends GenericForwardComposer<Component> {
 			return;
 		}
 
+		// 2) Rellenar datos de la cabecera
 		Compras.setNumeroFactura(txtNumeroFactura.getValue());
 		Compras.setFechaIngreso(FormatoUtil.convertirADateLocal(date_fecha_ingreso.getValue()));
 		Compras.setFechaPago(FormatoUtil.convertirADateLocal(date_fecha_pago.getValue()));
+
 		Comboitem itemProveedor = comb_Proveedor.getSelectedItem();
 		Comboitem itemMedioPago = comb_medio_pago.getSelectedItem();
-
 		if (itemProveedor != null) {
 			Compras.setProveedor((Proveedor) itemProveedor.getValue());
 		}
 		if (itemMedioPago != null) {
 			Compras.setMedioPago((MedioPago) itemMedioPago.getValue());
 		}
+
+		// 3) Asociar cada detalle a la compra (y fechas de vencimiento quedan en el
+		// objeto)
 		for (CompraDetalle detalle : Compras.getDetalles()) {
 			detalle.setCompra(Compras);
+			// opcional: ajustar aquí la fecha de vencimiento en detalle si la necesitas
+			// antes
 		}
+
+		// 4) Llamar al servicio que agrupa toda la lógica de Hibernate
 		try {
-			ComprasDAO compraDAO = new ComprasDAO();
-			compraDAO.save(Compras);
+			ComprasService service = new ComprasService();
+			service.guardarCompraConProductosYMovInv(Compras);
 
-			InventarioDAO inventarioDAO = new InventarioDAO();
-			inventarioDAO.registrarMovimientoInventarioPorCompra(Compras);
-
-			Messagebox.show("Compra guardada exitosamente.", "Éxito", Messagebox.OK, Messagebox.INFORMATION, e -> {
-				limpiarPantallaCompra();
-			});
+			Messagebox.show("Compra guardada exitosamente.", "Éxito", Messagebox.OK, Messagebox.INFORMATION,
+					evt -> limpiarPantallaCompra());
 		} catch (Exception e) {
 			e.printStackTrace();
 			Messagebox.show("Error al guardar la compra: " + e.getMessage(), "Error", Messagebox.OK, Messagebox.ERROR);
 		}
-
 	}
 
 	private boolean validarCabecera() {
@@ -375,8 +376,8 @@ public class ComprasController extends GenericForwardComposer<Component> {
 		}
 		rowsDetalle.getChildren().clear();
 		txtNumeroFactura.setValue("");
-		date_fecha_ingreso.setValue(null);
-		date_fecha_pago.setValue(null);
+		date_fecha_ingreso.setValue(new Date());
+		date_fecha_pago.setValue(new Date());
 		comb_Proveedor.setSelectedItem(null);
 		comb_medio_pago.setSelectedItem(null);
 

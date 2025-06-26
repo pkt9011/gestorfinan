@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+	<window id="winProductosVencer" title="Productos por Vencer"
+		border="normal" width="100%" height="100%" style="padding:1rem;"
+		apply="com.italoweb.gestorfinan.controller.ProductosVencerController">
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<label value="Productos por vencer"
+					sclass="panel-title"
+					style="font-size:1.4em; font-weight:bold; margin:0;" />
+			</div>
+			<div class="panel-body">
+				<div class="row">
+
+					<!-- Semana Actual -->
+					<div class="col-xs-12 col-md-6">
+						<label value="🗓️ Vencen esta semana"
+							style="font-weight:bold; font-size:1.2em; margin-bottom:0.5rem;" />
+						<div class="table-responsive">
+							<grid id="gridSemanaActual" width="100%">
+								<columns>
+									<column label="Fecha" width="25%" />
+									<column label="Código" width="20%" />
+									<column label="Nombre" width="35%" />
+									<column label="Días restantes"
+										width="20%" />
+								</columns>
+								<rows />
+							</grid>
+						</div>
+					</div>
+
+					<!-- Semana Siguiente -->
+					<div class="col-xs-12 col-md-6">
+						<label value="🗓️ Vencen la próxima semana"
+							style="font-weight:bold; font-size:1.2em; margin-bottom:0.5rem;" />
+						<div class="table-responsive">
+							<grid id="gridSemanaSiguiente"
+								width="100%">
+								<columns>
+									<column label="Fecha" width="25%" />
+									<column label="Código" width="20%" />
+									<column label="Nombre" width="35%" />
+									<column label="Días restantes"
+										width="20%" />
+								</columns>
+								<rows />
+							</grid>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</window>
+
+</zk>

@@ -31,7 +31,6 @@ import com.italoweb.gestorfinan.model.poblacion.Departamento;
 import com.italoweb.gestorfinan.model.poblacion.Pais;
 import com.italoweb.gestorfinan.repository.PoblacionDAO;
 import com.italoweb.gestorfinan.repository.ProveedorDAO;
-import com.italoweb.gestorfinan.repository.TipoProveedorDAO;
 import com.italoweb.gestorfinan.util.ComponentsUtil;
 import com.italoweb.gestorfinan.util.DialogUtil;
 

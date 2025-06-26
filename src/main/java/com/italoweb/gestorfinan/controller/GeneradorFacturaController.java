@@ -44,6 +44,7 @@ public class GeneradorFacturaController {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public File generarFactura(String nombreArchivo, String nombreEmpresa, String nitEmpresa, String direccionEmpresa,
 			String telefonoEmpresa, String emailEmpresa, Cliente cliente, String fecha, String numeroFactura,
 			List<ItemFactura> items, BigDecimal subTotal, BigDecimal totalIVA, BigDecimal totalDcto,
@@ -256,42 +257,6 @@ public class GeneradorFacturaController {
 		if (texto == null)
 			return "";
 		return texto.length() > maxLength ? texto.substring(0, maxLength) : texto;
-	}
-
-	private void dibujarTotalesCuadriculados(PDPageContentStream contenido, float xStart, float yStart,
-			float totalTableWidth, BigDecimal subTotal, BigDecimal totalIVA, BigDecimal totalDcto,
-			BigDecimal totalVenta, float rowHeight) throws IOException {
-
-		String[] etiquetas = { "SUBTOTAL:", "IVA:", "DESCUENTO:", "TOTAL:" };
-		String[] valores = { "$" + FormatoUtil.formatDecimal(subTotal.setScale(2, RoundingMode.HALF_UP)),
-				"$" + FormatoUtil.formatDecimal(totalIVA.setScale(2, RoundingMode.HALF_UP)),
-				totalDcto != null && totalDcto.compareTo(BigDecimal.ZERO) > 0
-						? "-$" + FormatoUtil.formatDecimal(totalDcto.setScale(2, RoundingMode.HALF_UP))
-						: "$0.00",
-				"$" + FormatoUtil.formatDecimal(totalVenta.setScale(2, RoundingMode.HALF_UP)) };
-
-		float col1Width = totalTableWidth * 0.5f;
-		float col2Width = totalTableWidth * 0.5f;
-
-		for (int i = 0; i < etiquetas.length; i++) {
-			float y = yStart - i * rowHeight;
-
-			contenido.addRect(xStart, y, col1Width, rowHeight);
-			contenido.addRect(xStart + col1Width, y, col2Width, rowHeight);
-			contenido.stroke();
-
-			contenido.beginText();
-			contenido.setFont(PDType1Font.HELVETICA_BOLD, 9);
-			contenido.newLineAtOffset(xStart + 5, y + 4);
-			contenido.showText(etiquetas[i]);
-			contenido.endText();
-
-			contenido.beginText();
-			contenido.setFont(PDType1Font.HELVETICA, 9);
-			contenido.newLineAtOffset(xStart + col1Width + 5, y + 4);
-			contenido.showText(valores[i]);
-			contenido.endText();
-		}
 	}
 
 	public File generarFacturaTicket80mm(String nombreArchivo, String nombreEmpresa, String nitEmpresa,
@@ -590,6 +555,10 @@ public class GeneradorFacturaController {
 				contenido.endText();
 				float yPos = y - (FONT_SIZE_TITULO + 2); // empieza un poco más abajo que el Total
 				for (FacturaImpuesto imp : impuestos) {
+					if (imp.getPorcentaje().compareTo(BigDecimal.ZERO) == 0
+							|| imp.getValor().compareTo(BigDecimal.ZERO) == 0) {
+						continue;
+					}
 					// Etiqueta IVA X %:
 					contenido.beginText();
 					contenido.setFont(FONT_BOLD, FONT_SIZE_TITULO);
@@ -666,6 +635,9 @@ public class GeneradorFacturaController {
 
 		// 2) Desglose de IVA por porcentaje
 		for (FacturaImpuesto imp : impuestos) {
+			if (imp.getPorcentaje().compareTo(BigDecimal.ZERO) == 0 || imp.getValor().compareTo(BigDecimal.ZERO) == 0) {
+				continue;
+			}
 			contenido.beginText();
 			contenido.setFont(bold, 10);
 			contenido.newLineAtOffset(labelX, y);

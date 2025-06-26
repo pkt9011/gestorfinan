@@ -132,6 +132,7 @@ public class FormatoUtil {
 	}
 	
 	// ---  MONETARIOS ----
+	@SuppressWarnings("deprecation")
 	public static String formatDecimal(BigDecimal value) {
 		if (value == null)
 			return "0,00"; // Notar coma si es formato CO
